@@ -1,9 +1,12 @@
 import server from "./server";
+import { useEffect } from "react";
 
-function Wallet({ address, setAddress, balance, setBalance }) {
-  async function onChange(evt) {
-    const address = evt.target.value;
-    setAddress(address);
+function Wallet({ privateKey, setPrivateKey, address, balance, setBalance }) {
+  useEffect(() => {
+    if (address != "") getBalance();
+  }, [address]);
+
+  async function getBalance() {
     if (address) {
       const {
         data: { balance },
@@ -14,13 +17,22 @@ function Wallet({ address, setAddress, balance, setBalance }) {
     }
   }
 
+  const onChangePK = (evt) => {
+    setPrivateKey(evt.target.value);
+  };
+
   return (
     <div className="container wallet">
       <h1>Your Wallet</h1>
 
       <label>
         Wallet Address
-        <input placeholder="Type an address, for example: 0x1" value={address} onChange={onChange}></input>
+        <div>{address}</div>
+      </label>
+
+      <label>
+        Your Private Key to sign message
+        <input value={privateKey} onChange={onChangePK}></input>
       </label>
 
       <div className="balance">Balance: {balance}</div>
